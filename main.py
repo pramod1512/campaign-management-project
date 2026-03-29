@@ -2,7 +2,15 @@ from flask import Flask, render_template, request, redirect, url_for, session, j
 import mysql.connector
 import os
 
-mydb = mysql.connector.connect(host='localhost', user='root', password='', database='actnow')
+ 
+
+mydb = mysql.connector.connect(
+    host=os.getenv("MYSQLHOST"),
+    user=os.getenv("MYSQLUSER"),
+    password=os.getenv("MYSQLPASSWORD"),
+    database=os.getenv("MYSQLDATABASE"),
+    port=int(os.getenv("MYSQLPORT"))
+)
 cursor = mydb.cursor()
 
 app = Flask(__name__)
