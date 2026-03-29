@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ActNow | Organizer Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #2E8B57;
+      --green-light: #52c987;
+      --green-pale:  #e8f8f0;
+      --blue:        #0077cc;
+      --blue-light:  #e6f3ff;
+      --text:        #1a1a2e;
+      --muted:       #666;
+      --white:       #ffffff;
+      --bg:          #f4f9f6;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      padding: 14px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      animation: slideDown 0.6s ease;
+    }
+
+    .logo { font-size: 24px; font-weight: 800; color: var(--green); letter-spacing: 1px; text-decoration: none; }
+    .logo span { color: var(--blue); }
+
+    nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    nav a {
+      color: var(--text); text-decoration: none; padding: 7px 14px;
+      border-radius: 20px; font-weight: 600; font-size: 14px; transition: all 0.25s ease;
+    }
+    nav a:hover, nav a.active { background: var(--green-pale); color: var(--green); }
+
+    .nav-user-badge {
+      background: var(--green-pale); color: var(--green);
+      padding: 6px 14px; border-radius: 20px; font-size: 13px; font-weight: 700;
+    }
+
+    .nav-logout { background: #fdecea !important; color: #c0392b !important; }
+    .nav-logout:hover { background: #c0392b !important; color: white !important; }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      position: relative;
+      background: linear-gradient(135deg, #e8f8f0 0%, #e6f3ff 60%, #f4f9f6 100%);
+      padding: 48px 36px 52px;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute; border-radius: 50%; filter: blur(55px);
+      opacity: 0.28; animation: floatBlob linear infinite; pointer-events: none;
+    }
+    .blob-1 { width: 300px; height: 300px; background: radial-gradient(circle,#52c987,#2E8B57); top:-100px; left:-80px; animation-duration:14s; }
+    .blob-2 { width: 240px; height: 240px; background: radial-gradient(circle,#74b9ff,#0077cc); bottom:-60px; right:-60px; animation-duration:18s; animation-direction:reverse; }
+
+    .hero-inner {
+      position: relative; z-index: 10;
+      max-width: 1100px; margin: 0 auto;
+      display: flex; align-items: center; gap: 28px; flex-wrap: wrap;
+    }
+
+    /* Profile card */
+    .profile-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 24px 28px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      border-left: 5px solid var(--green);
+      flex: 1;
+      min-width: 260px;
+      animation: fadeUp 0.5s ease;
+    }
+
+    .avatar {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px; font-weight: 800; color: white; flex-shrink: 0;
+    }
+
+    .profile-info h2 { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+    .profile-info p  { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+
+    .role-tag {
+      display: inline-block; background: var(--green-pale); color: var(--green);
+      padding: 3px 12px; border-radius: 12px; font-size: 12px; font-weight: 700;
+    }
+
+    /* Stats */
+    .stat-box {
+      background: var(--white); border-radius: 14px; padding: 20px 28px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.07); text-align: center;
+      border-top: 4px solid var(--green); animation: fadeUp 0.6s ease; min-width: 150px;
+    }
+    .stat-num   { font-size: 36px; font-weight: 800; color: var(--green); }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1; max-width: 1100px; margin: 36px auto;
+      padding: 0 36px; width: 100%;
+    }
+
+    .section-title {
+      font-size: 16px; font-weight: 700; color: var(--text);
+      margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #eee;
+    }
+
+    /* Action cards */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .action-card {
+      background: var(--white); border-radius: 16px; padding: 28px 24px;
+      text-align: center; box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-bottom 0.3s;
+      border-bottom: 4px solid transparent; animation: fadeUp 0.5s ease;
+    }
+
+    .action-card:hover {
+      transform: translateY(-6px); box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border-bottom-color: var(--green);
+    }
+
+    .action-card .a-icon { font-size: 40px; margin-bottom: 14px; display: block; }
+    .action-card h3 { font-size: 17px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .action-card p  { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.6; }
+
+    .action-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      color: white; border: none; padding: 11px 20px; border-radius: 10px;
+      font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(46,139,87,0.25);
+    }
+    .action-btn:hover { transform: scale(1.03); box-shadow: 0 5px 16px rgba(46,139,87,0.35); }
+
+    /* ── FOOTER ── */
+    footer { background: var(--text); color: #aaa; text-align: center; padding: 20px; font-size: 13px; margin-top: auto; }
+    footer span { color: var(--green-light); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes slideDown { from { transform: translateY(-40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeUp    { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes floatBlob {
+      0%   { transform: translate(0,0) scale(1); }
+      25%  { transform: translate(25px,-18px) scale(1.04); }
+      50%  { transform: translate(-18px,25px) scale(0.97); }
+      75%  { transform: translate(18px,18px) scale(1.03); }
+      100% { transform: translate(0,0) scale(1); }
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 20px; }
+      main { padding: 0 16px; }
+      .page-hero { padding: 32px 20px; }
+      .hero-inner { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Act<span>Now</span></a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/campaigns">Campaigns</a>
+    <a href="/organizer_dashboard" class="active">Dashboard</a>
+    <span class="nav-user-badge">🏢 {{ org_name }}</span>
+    <a href="/logout" class="nav-logout">Logout</a>
+  </nav>
+</header>
+
+<!-- Hero -->
+<section class="page-hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="hero-inner">
+    <!-- Profile -->
+    <div class="profile-card">
+      <div class="avatar">{{ org_name[0].upper() }}</div>
+      <div class="profile-info">
+        <h2>{{ org_name }}</h2>
+        <p>📧 {{ org_email }}</p>
+        <span class="role-tag">🏢 Organizer</span>
+      </div>
+    </div>
+
+    <!-- Stat -->
+    <div class="stat-box">
+      <div class="stat-num">{{ campaign_count }}</div>
+      <div class="stat-label">Campaigns Created</div>
+    </div>
+  </div>
+</section>
+
+<!-- Main -->
+<main>
+  <div class="section-title">Quick Actions</div>
+  <div class="action-grid">
+
+    <div class="action-card">
+      <span class="a-icon">➕</span>
+      <h3>Create New Campaign</h3>
+      <p>Plan and launch your next campaign or community event.</p>
+      <form action="/create_campaigns">
+        <button class="action-btn" type="submit">Create Campaign →</button>
+      </form>
+    </div>
+
+    <div class="action-card">
+      <span class="a-icon">📋</span>
+      <h3>Manage Campaigns</h3>
+      <p>View, edit, delete and track all your created campaigns.</p>
+      <form action="/manage_campaigns">
+        <button class="action-btn" type="submit">View Campaigns →</button>
+      </form>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 <span>ActNOW</span> | All Rights Reserved</p>
+</footer>
+
+</body>
+</html>

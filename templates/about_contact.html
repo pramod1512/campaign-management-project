@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About & Contact - ActNOW</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #2E8B57;
+      --green-light: #52c987;
+      --green-pale:  #e8f8f0;
+      --blue:        #0077cc;
+      --blue-light:  #e6f3ff;
+      --text:        #1a1a2e;
+      --muted:       #666;
+      --white:       #ffffff;
+      --bg:          #f4f9f6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      padding: 14px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      animation: slideDown 0.6s ease;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+    .logo span { color: var(--blue); }
+
+    nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.25s ease;
+    }
+
+    nav a:hover, nav a.active { background: var(--green-pale); color: var(--green); }
+
+    .nav-login {
+      background: var(--green) !important;
+      color: white !important;
+      padding: 8px 18px !important;
+      border-radius: 20px !important;
+    }
+    .nav-login:hover { background: #256a45 !important; transform: scale(1.04); }
+
+    .nav-logout { background: #fdecea !important; color: #c0392b !important; }
+    .nav-logout:hover { background: #c0392b !important; color: white !important; }
+
+    .nav-user-badge {
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ── HERO BANNER ── */
+    .page-hero {
+      position: relative;
+      background: linear-gradient(135deg, #e8f8f0 0%, #e6f3ff 60%, #f4f9f6 100%);
+      padding: 80px 20px 90px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(55px);
+      opacity: 0.3;
+      animation: floatBlob linear infinite;
+      pointer-events: none;
+    }
+    .blob-1 { width: 350px; height: 350px; background: radial-gradient(circle, #52c987, #2E8B57); top: -120px; left: -100px; animation-duration: 14s; }
+    .blob-2 { width: 280px; height: 280px; background: radial-gradient(circle, #74b9ff, #0077cc); bottom: -80px; right: -60px; animation-duration: 18s; animation-direction: reverse; }
+    .blob-3 { width: 180px; height: 180px; background: radial-gradient(circle, #ffeaa7, #fdcb6e); top: 30%; left: 55%; animation-duration: 22s; }
+
+    .page-hero-content { position: relative; z-index: 10; }
+
+    .page-tag {
+      display: inline-block;
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .page-hero h1 {
+      font-size: 46px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 14px;
+      animation: fadeInDown 1s ease;
+      line-height: 1.15;
+    }
+
+    .page-hero h1 span {
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-hero p {
+      font-size: 17px;
+      color: var(--muted);
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.7;
+      animation: fadeInUp 1.1s ease;
+    }
+
+    /* ── SECTION SHARED ── */
+    .section-tag {
+      display: inline-block;
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .section-tag.green { background: var(--green-pale); color: var(--green); }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ── MISSION SECTION ── */
+    .mission {
+      padding: 80px 40px;
+      background: var(--white);
+    }
+
+    .mission-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+
+    .mission-text .section-tag { display: block; margin-bottom: 12px; }
+
+    .mission-text h2 {
+      font-size: 34px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .mission-text p {
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.8;
+      margin-bottom: 14px;
+    }
+
+    .mission-visual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .mission-card {
+      background: var(--bg);
+      border-radius: 14px;
+      padding: 22px 18px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-top: 3px solid transparent;
+    }
+
+    .mission-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-top-color: var(--green); }
+    .mission-card .mc-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+    .mission-card h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .mission-card p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── VALUES SECTION ── */
+    .values {
+      padding: 80px 40px;
+      background: var(--bg);
+      text-align: center;
+    }
+
+    .values h2 { font-size: 34px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .values > p { color: var(--muted); font-size: 15px; margin-bottom: 48px; }
+
+    .values-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 22px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .value-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 30px 22px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .value-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+
+    .value-card:hover { transform: translateY(-6px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    .value-card:hover::after { transform: scaleX(1); }
+
+    .value-card .v-icon { font-size: 38px; margin-bottom: 14px; display: block; }
+    .value-card h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .value-card p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── TEAM SECTION ── */
+    .team {
+      padding: 80px 40px;
+      background: var(--white);
+      text-align: center;
+    }
+
+    .team h2 { font-size: 34px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .team > p { color: var(--muted); font-size: 15px; margin-bottom: 48px; }
+
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .team-card {
+      background: var(--bg);
+      border-radius: 16px;
+      padding: 28px 20px;
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .team-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+
+    .team-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 800;
+      color: white;
+    }
+
+    .avatar-green { background: linear-gradient(135deg, var(--green), var(--green-light)); }
+    .avatar-blue  { background: linear-gradient(135deg, var(--blue), #00aaff); }
+    .avatar-teal  { background: linear-gradient(135deg, #00b894, #00cec9); }
+    .avatar-purple{ background: linear-gradient(135deg, #6c5ce7, #a29bfe); }
+
+    .team-card h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .team-card .role { font-size: 13px; color: var(--green); font-weight: 600; margin-bottom: 8px; }
+    .team-card p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+    /* ── CONTACT SECTION ── */
+    .contact-section {
+      padding: 80px 40px;
+      background: var(--bg);
+    }
+
+    .contact-section-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .contact-section-inner h2 { font-size: 34px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .contact-section-inner p  { color: var(--muted); font-size: 15px; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    /* Info cards */
+    .contact-info-col { display: flex; flex-direction: column; gap: 16px; }
+
+    .info-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 20px 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .info-card:hover { transform: translateX(5px); box-shadow: 0 6px 18px rgba(0,0,0,0.1); }
+
+    .info-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--green-pale);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .info-text h4 { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .info-text p  { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+    /* Map card */
+    .map-card {
+      background: var(--white);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+    }
+
+    .map-card iframe {
+      width: 100%;
+      height: 220px;
+      border: none;
+      display: block;
+    }
+
+    .map-card-footer {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .map-card-footer span { font-size: 20px; }
+    .map-card-footer p { font-size: 13px; color: var(--muted); }
+    .map-card-footer strong { color: var(--text); }
+
+    /* Contact Form */
+    .contact-form-col {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 36px 32px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-form-col::before {
+      content: '';
+      position: absolute;
+      width: 250px; height: 250px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,139,87,0.08), transparent 70%);
+      top: -80px; right: -60px;
+      pointer-events: none;
+    }
+
+    .contact-form-col h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-form-col > p {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .contact-form input,
+    .contact-form textarea {
+      padding: 11px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+      transition: border 0.3s, box-shadow 0.3s;
+      width: 100%;
+    }
+
+    .contact-form input:focus,
+    .contact-form textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(46,139,87,0.12);
+      outline: none;
+      background: white;
+    }
+
+    .contact-form textarea { resize: vertical; }
+
+    .contact-form button {
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      color: white;
+      border: none;
+      padding: 13px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(46,139,87,0.3);
+    }
+
+    .contact-form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46,139,87,0.4);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: #aaa;
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+    }
+
+    footer span { color: var(--green-light); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes slideDown {
+      from { transform: translateY(-40px); opacity: 0; }
+      to   { transform: translateY(0);     opacity: 1; }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes floatBlob {
+      0%   { transform: translate(0,0)     scale(1);    }
+      25%  { transform: translate(25px,-18px) scale(1.04); }
+      50%  { transform: translate(-18px,25px) scale(0.97); }
+      75%  { transform: translate(18px,18px)  scale(1.03); }
+      100% { transform: translate(0,0)     scale(1);    }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .mission-inner  { grid-template-columns: 1fr; gap: 36px; }
+      .contact-grid   { grid-template-columns: 1fr; }
+      .mission-visual { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 600px) {
+      .page-hero h1   { font-size: 32px; }
+      header          { padding: 12px 20px; }
+      .mission, .values, .team, .contact-section { padding: 60px 20px; }
+      .form-row       { grid-template-columns: 1fr; }
+      .contact-form-col { padding: 24px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header>
+  <a href="/" class="logo">Act<span>Now</span></a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/campaigns">Campaigns</a>
+    <a href="/about_contact" class="active">About / Contact</a>
+
+    {% if session.get('role') == 'Volunteer' %}
+      <a href="/volunteer_registration">My Campaigns</a>
+      <span class="nav-user-badge">👤 {{ session.get('user_name', '').split()[0] }}</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+
+    {% elif session.get('role') == 'Organizer' %}
+      <a href="/organizer_dashboard">Dashboard</a>
+      <span class="nav-user-badge">🏢 {{ session.get('org_name', '').split()[0] }}</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+
+    {% elif session.get('role') == 'Admin' %}
+      <a href="/admin_dashboard">Admin Panel</a>
+      <span class="nav-user-badge">🛡️ Admin</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+
+    {% else %}
+      <a href="/loginpage" class="nav-login">Login / Register</a>
+    {% endif %}
+  </nav>
+</header>
+
+
+<!-- ═══════════ HERO BANNER ═══════════ -->
+<section class="page-hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="page-hero-content">
+    <div class="page-tag">🌿 Who We Are</div>
+    <h1>About <span>ActNOW</span></h1>
+    <p>A platform dedicated to bringing passionate people together to create meaningful, lasting change in communities across India.</p>
+  </div>
+</section>
+
+
+<!-- ═══════════ MISSION ═══════════ -->
+<section class="mission reveal">
+  <div class="mission-inner">
+    <div class="mission-text">
+      <span class="section-tag">Our Mission</span>
+      <h2>Connecting People<br>With Purpose</h2>
+      <p>ActNOW is built on the belief that every individual has the power to make a difference. We connect passionate volunteers with impactful campaigns that promote sustainability, education, and social responsibility.</p>
+      <p>Every campaign — no matter how small — contributes toward creating a better, more equitable future for everyone.</p>
+      <p>Our vision is to build a united, action-driven community where everyone contributes to social good — from local cleanups to national awareness drives.</p>
+    </div>
+
+    <div class="mission-visual">
+      <div class="mission-card">
+        <span class="mc-icon">🎯</span>
+        <h4>Clear Goals</h4>
+        <p>Every campaign has defined objectives and measurable outcomes.</p>
+      </div>
+      <div class="mission-card">
+        <span class="mc-icon">🌍</span>
+        <h4>Real Impact</h4>
+        <p>We track results and ensure every effort creates tangible change.</p>
+      </div>
+      <div class="mission-card">
+        <span class="mc-icon">👥</span>
+        <h4>People First</h4>
+        <p>Volunteers are the heart of everything we do at ActNOW.</p>
+      </div>
+      <div class="mission-card">
+        <span class="mc-icon">🚀</span>
+        <h4>Fast & Easy</h4>
+        <p>Register for campaigns in minutes and start making a difference.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ VALUES ═══════════ -->
+<section class="values reveal">
+  <div class="section-tag green">What We Stand For</div>
+  <h2>Our Core Values</h2>
+  <p>The principles that guide every campaign, every volunteer, and every decision we make.</p>
+
+  <div class="values-grid">
+    <div class="value-card">
+      <span class="v-icon">🌱</span>
+      <h3>Responsibility</h3>
+      <p>We take ownership of our impact — on people, communities, and the planet we share.</p>
+    </div>
+    <div class="value-card">
+      <span class="v-icon">💡</span>
+      <h3>Innovation</h3>
+      <p>We constantly find creative, effective new solutions to complex community challenges.</p>
+    </div>
+    <div class="value-card">
+      <span class="v-icon">🤝</span>
+      <h3>Collaboration</h3>
+      <p>We believe the best outcomes are achieved when people work together toward shared goals.</p>
+    </div>
+    <div class="value-card">
+      <span class="v-icon">❤️</span>
+      <h3>Empathy</h3>
+      <p>We listen, understand, and act with genuine care for those our campaigns serve.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ TEAM ═══════════ -->
+<section class="team reveal">
+  <div class="section-tag">The People</div>
+  <h2>Meet Our Team</h2>
+  <p>Passionate individuals working behind the scenes to make ActNOW a better platform every day.</p>
+
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar avatar-green">P</div>
+      <h3>Pramod Salunkhe</h3>
+      <div class="role">Founder & CEO</div>
+      <p>Passionate about social impact and building communities that care.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar avatar-blue">S</div>
+      <h3>Shubham Pagare</h3>
+      <div class="role">Head of Campaigns</div>
+      <p>Designs and manages all campaigns to ensure maximum community impact.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar avatar-teal">D</div>
+      <h3>Datta Farande</h3>
+      <div class="role">Tech Lead</div>
+      <p>Builds and maintains the ActNOW platform to keep it fast and reliable.</p>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar avatar-purple">R</div>
+      <h3>Runal Khaire Patel</h3>
+      <div class="role">Volunteer Coordinator</div>
+      <p>Connects volunteers with the right campaigns and ensures great experiences.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════ CONTACT ═══════════ -->
+<section class="contact-section reveal">
+  <div class="contact-section-inner">
+    <div class="section-tag green">Get In Touch</div>
+    <h2>Contact Us</h2>
+    <p>Have a question, suggestion, or want to partner with us? We'd love to hear from you.</p>
+  </div>
+
+  <div class="contact-grid">
+
+    <!-- Left: Info + Map -->
+    <div class="contact-info-col">
+      <div class="info-card">
+        <div class="info-icon">📧</div>
+        <div class="info-text">
+          <h4>Email Us</h4>
+          <p>support@actnow.org<br>We reply within 24 hours.</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">📞</div>
+        <div class="info-text">
+          <h4>Call Us</h4>
+          <p>+91 98765 43210<br>Mon – Sat, 9 AM to 6 PM IST</p>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">📍</div>
+        <div class="info-text">
+          <h4>Visit Us</h4>
+          <p>ActNOW Office, Green Park,<br>Nashik – 422012, India</p>
+        </div>
+      </div>
+
+      <!-- Map Card -->
+      <div class="map-card">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3504.345!2d77.2090!3d28.5494!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390ce26b0e5ccccd%3A0x1a89d8b0e4a68d19!2sGreen%20Park%2C%20New%20Delhi!5e0!3m2!1sen!2sin!4v1680000000000"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+        <div class="map-card-footer">
+          <span>🗺️</span>
+          <p><strong>Green Park, Nashik, Maharashtra</strong> — Our headquarters</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: Form -->
+    <div class="contact-form-col">
+      <h3>✉️ Send Us a Message</h3>
+      <p>Fill out the form below and our team will get back to you shortly.</p>
+
+      <form class="contact-form" action="/inquiries" method="GET">
+        <div class="form-row">
+          <input type="text"  name="name"  placeholder="Your Name"  required>
+          <input type="email" name="email" placeholder="Your Email" required>
+        </div>
+        <textarea name="message" rows="7" placeholder="Write your message here..." required></textarea>
+        <button type="submit">📨 Send Message</button>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <p>&copy; 2025 <span>ActNOW</span> | All Rights Reserved &nbsp;|&nbsp; Made with ❤️ for a better world</p>
+</footer>
+
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  reveals.forEach(r => observer.observe(r));
+</script>
+
+</body>
+</html>

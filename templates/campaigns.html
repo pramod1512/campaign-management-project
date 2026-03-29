@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ActNow - Campaigns</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #2E8B57;
+      --green-light: #52c987;
+      --green-pale:  #e8f8f0;
+      --blue:        #0077cc;
+      --blue-light:  #e6f3ff;
+      --orange:      #ff9800;
+      --text:        #1a1a2e;
+      --muted:       #666;
+      --white:       #ffffff;
+      --bg:          #f4f9f6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      padding: 14px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      animation: slideDown 0.6s ease;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+    .logo span { color: var(--blue); }
+
+    nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.25s ease;
+    }
+
+    nav a:hover, nav a.active { background: var(--green-pale); color: var(--green); }
+
+    .nav-login {
+      background: var(--green) !important;
+      color: white !important;
+      padding: 8px 18px !important;
+      border-radius: 20px !important;
+    }
+    .nav-login:hover { background: #256a45 !important; transform: scale(1.04); }
+    .nav-logout { background: #fdecea !important; color: #c0392b !important; }
+    .nav-logout:hover { background: #c0392b !important; color: white !important; }
+    .nav-user-badge {
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      position: relative;
+      background: linear-gradient(135deg, #e8f8f0 0%, #e6f3ff 60%, #f4f9f6 100%);
+      padding: 52px 20px 56px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(55px);
+      opacity: 0.28;
+      animation: floatBlob linear infinite;
+      pointer-events: none;
+    }
+    .blob-1 { width: 300px; height: 300px; background: radial-gradient(circle,#52c987,#2E8B57); top:-100px; left:-80px; animation-duration:14s; }
+    .blob-2 { width: 240px; height: 240px; background: radial-gradient(circle,#74b9ff,#0077cc); bottom:-60px; right:-60px; animation-duration:18s; animation-direction:reverse; }
+
+    .page-hero-content { position: relative; z-index: 10; }
+
+    .page-tag {
+      display: inline-block;
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .page-hero h1 {
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 10px;
+      line-height: 1.2;
+    }
+
+    .page-hero h1 span {
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-hero p { font-size: 15px; color: var(--muted); }
+
+    /* ── SEARCH & FILTER BAR ── */
+    .search-bar {
+      background: var(--white);
+      padding: 20px 36px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+      position: sticky;
+      top: 65px;
+      z-index: 100;
+    }
+
+    .search-bar-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-input-wrap {
+      position: relative;
+      flex: 2;
+      min-width: 200px;
+    }
+
+    .search-input-wrap span {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      pointer-events: none;
+    }
+
+    .search-input-wrap input {
+      width: 100%;
+      padding: 10px 14px 10px 36px;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    .search-input-wrap input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(46,139,87,0.12);
+      outline: none;
+      background: white;
+    }
+
+    .filter-select {
+      flex: 1;
+      min-width: 140px;
+      padding: 10px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+      cursor: pointer;
+      transition: border 0.3s;
+    }
+
+    .filter-select:focus {
+      border-color: var(--green);
+      outline: none;
+    }
+
+    .search-btn {
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .search-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(46,139,87,0.3); }
+
+    .reset-btn {
+      background: #f0f0f0;
+      color: var(--muted);
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .reset-btn:hover { background: #e0e0e0; color: var(--text); }
+
+    /* ── TOOLBAR (count + view toggle) ── */
+    .toolbar {
+      max-width: 1100px;
+      margin: 24px auto 0;
+      padding: 0 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .results-count {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .results-count strong { color: var(--green); }
+
+    .view-toggle {
+      display: flex;
+      gap: 6px;
+    }
+
+    .view-btn {
+      background: var(--white);
+      border: 1.5px solid #ddd;
+      border-radius: 8px;
+      padding: 7px 12px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      color: var(--muted);
+    }
+
+    .view-btn.active {
+      background: var(--green-pale);
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    .view-btn:hover { border-color: var(--green); color: var(--green); }
+
+    /* ── CAMPAIGNS CONTAINER ── */
+    .campaigns-container {
+      flex: 1;
+      max-width: 1100px;
+      margin: 20px auto 40px;
+      padding: 0 36px;
+      width: 100%;
+    }
+
+    /* ── GRID VIEW ── */
+    .campaigns-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 24px;
+    }
+
+    /* ── LIST VIEW ── */
+    .campaigns-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* ── CARD (GRID) ── */
+    .campaign-card {
+      background: var(--white);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeUp 0.4s ease;
+    }
+
+    .campaign-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 185px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 16px 18px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+
+    .card-body h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      flex: 1;
+    }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .status-Active    { background: #e8f8f0; color: #2E8B57; }
+    .status-Inactive  { background: #fff3e0; color: #e67e22; }
+    .status-Completed { background: var(--blue-light); color: var(--blue); }
+
+    .card-organizer {
+      font-size: 13px;
+      color: var(--green);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 12px;
+    }
+
+    .card-meta span {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+      margin-bottom: 14px;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      padding: 12px 18px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .register-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 3px 10px rgba(46,139,87,0.25);
+    }
+
+    .register-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 16px rgba(46,139,87,0.35);
+    }
+
+    /* ── LIST CARD ── */
+    .campaign-card.list-card {
+      flex-direction: row;
+      align-items: stretch;
+      border-radius: 14px;
+    }
+
+    .campaign-card.list-card .card-img {
+      width: 180px;
+      height: auto;
+      min-height: 140px;
+      flex-shrink: 0;
+      border-radius: 14px 0 0 14px;
+    }
+
+    .campaign-card.list-card .card-body {
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 20px;
+    }
+
+    .campaign-card.list-card .card-body-left { flex: 1; }
+
+    .campaign-card.list-card .card-footer {
+      border-top: none;
+      border-left: 1px solid #f0f0f0;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+    }
+
+    .campaign-card.list-card .register-btn {
+      width: 130px;
+      white-space: nowrap;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      grid-column: 1 / -1;
+    }
+
+    .empty-state .empty-icon { font-size: 60px; margin-bottom: 16px; display: block; }
+    .empty-state h3 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .empty-state p  { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+    .empty-state a  {
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 10px 22px;
+      border-radius: 20px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .empty-state a:hover { background: var(--green); color: white; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: #aaa;
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      margin-top: auto;
+    }
+    footer span { color: var(--green-light); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes slideDown {
+      from { transform: translateY(-40px); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes floatBlob {
+      0%   { transform: translate(0,0)       scale(1);    }
+      25%  { transform: translate(25px,-18px) scale(1.04); }
+      50%  { transform: translate(-18px,25px) scale(0.97); }
+      75%  { transform: translate(18px,18px)  scale(1.03); }
+      100% { transform: translate(0,0)       scale(1);    }
+    }
+
+     /* ── HOME LINK ── */
+    .home-link {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      animation: fadeInUp 0.8s ease;
+    }
+
+    .home-link a {
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .home-link a:hover { color: var(--green); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header { padding: 12px 20px; }
+      .search-bar { padding: 16px 20px; top: 58px; }
+      .toolbar, .campaigns-container { padding: 0 20px; }
+      .campaign-card.list-card { flex-direction: column; }
+      .campaign-card.list-card .card-img { width: 100%; height: 180px; border-radius: 14px 14px 0 0; }
+      .campaign-card.list-card .card-body { flex-direction: column; }
+      .campaign-card.list-card .card-footer { border-left: none; border-top: 1px solid #f0f0f0; }
+      .campaign-card.list-card .register-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header>
+  <a href="/" class="logo">Act<span>Now</span></a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/campaigns" class="active">Campaigns</a>
+    <a href="/about_contact">About / Contact</a>
+
+    {% if session.get('role') == 'Volunteer' %}
+      <a href="/volunteer_registration">My Campaigns</a>
+      <span class="nav-user-badge">👤 {{ session.get('user_name', '').split()[0] }}</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+
+    {% elif session.get('role') == 'Organizer' %}
+      <a href="/organizer_dashboard">Dashboard</a>
+      <span class="nav-user-badge">🏢 {{ session.get('org_name', '').split()[0] }}</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+
+    {% elif session.get('role') == 'Admin' %}
+      <a href="/admin_dashboard">Admin Panel</a>
+      <span class="nav-user-badge">🛡️ Admin</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+
+    {% else %}
+      <a href="/loginpage" class="nav-login">Login / Register</a>
+    {% endif %}
+  </nav>
+</header>
+
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="page-hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="page-hero-content">
+    <div class="page-tag">🌿 Make a Difference</div>
+    <h1>Explore <span>Campaigns</span></h1>
+    <p>Find and join campaigns that match your passion and location</p>
+  </div>
+</section>
+
+
+<!-- ═══════════ SEARCH BAR ═══════════ -->
+<div class="search-bar">
+  <div class="search-bar-inner">
+    <form action="/campaigns_search" method="GET" style="display:contents;">
+      <div class="search-input-wrap">
+        <span>🔍</span>
+        <input type="text" name="search"
+               placeholder="Search by title, state or district..."
+               value="{{ request.args.get('search', '') }}">
+      </div>
+
+      <select name="state" class="filter-select">
+        <option value="">All States</option>
+        {% set states = ['Maharashtra','Gujarat','Karnataka','Tamil Nadu','Kerala','Rajasthan','Delhi','Uttar Pradesh','Bihar','Madhya Pradesh'] %}
+        {% for s in states %}
+        <option value="{{ s }}" {% if request.args.get('state') == s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+
+      <select name="status" class="filter-select">
+        <option value="">All Status</option>
+        <option value="Active"    {% if request.args.get('status') == 'Active'    %}selected{% endif %}>🟢 Active</option>
+        <option value="Inactive"  {% if request.args.get('status') == 'Inactive'  %}selected{% endif %}>🟡 Inactive</option>
+        <option value="Completed" {% if request.args.get('status') == 'Completed' %}selected{% endif %}>🔵 Completed</option>
+      </select>
+
+      <button type="submit" class="search-btn">🔍 Search</button>
+    </form>
+
+    <a href="/campaigns" class="reset-btn">✕ Reset</a>
+  </div>
+</div>
+
+
+<!-- ═══════════ TOOLBAR ═══════════ -->
+<div class="toolbar">
+  <div class="results-count">
+    Showing <strong id="campaignCount">0</strong> campaign(s)
+    {% if request.args.get('search') or request.args.get('state') or request.args.get('status') %}
+      for your search
+    {% endif %}
+  </div>
+
+  <div class="view-toggle">
+    <button class="view-btn active" id="gridBtn" onclick="setView('grid')" title="Grid View">⊞</button>
+    <button class="view-btn"        id="listBtn" onclick="setView('list')" title="List View">☰</button>
+  </div>
+</div>
+
+
+<!-- ═══════════ CAMPAIGNS ═══════════ -->
+<div class="campaigns-container">
+  <div class="campaigns-grid" id="campaignsWrapper">
+
+    {% if result %}
+      {% for info in result %}
+
+      <div class="campaign-card" data-index="{{ loop.index }}">
+        <img class="card-img"
+             src="{{ info[10] }}"
+             alt="{{ info[1] }}"
+             onerror="this.src='https://via.placeholder.com/300x185?text=No+Image'">
+
+        <div class="card-body">
+          <div class="card-body-left">
+            <div class="card-top">
+              <h3>{{ info[1] }}</h3>
+              <span class="status-badge status-{{ status }}">{{ status }}</span>
+            </div>
+
+            <div class="card-organizer">🏢 {{ info[2] }}</div>
+
+            <div class="card-meta">
+              <span>📍 {{ info[6] }}</span>
+              <span>📍 {{ info[8] }}, {{ info[7] }}</span>
+              <span>📅 {{ info[9] }}</span>
+            </div>
+
+            <p class="card-desc"><b>Info:</b> {{ info[5] }}</p>
+            <p class="card-desc"><b>Status:</b> {{ info[4] }}</p>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <button class="register-btn"
+                  onclick="window.location.href='/reg_campaign/{{ info[0] }}'">
+            ✋ Register Now
+          </button>
+        </div>
+      </div>
+      {% endfor %}
+
+    {% else %}
+      <div class="empty-state">
+        <span class="empty-icon">🔍</span>
+        <h3>No Campaigns Found</h3>
+        <p>We couldn't find any campaigns matching your search.<br>Try different keywords or reset the filters.</p>
+        <a href="/campaigns">View All Campaigns</a>
+      </div>
+    {% endif %}
+
+  </div>
+  <div class="home-link">
+      <a href="/">← Back to Home</a>
+    </div>
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <p>&copy; 2025 <span>ActNOW</span> | All Rights Reserved &nbsp;|&nbsp; Made with ❤️ for a better world</p>
+</footer>
+
+
+<script>
+  // ── Count campaigns ──
+  const cards = document.querySelectorAll('.campaign-card');
+  document.getElementById('campaignCount').textContent = cards.length;
+
+  // ── View toggle ──
+  let currentView = localStorage.getItem('campaignView') || 'grid';
+  setView(currentView);
+
+  function setView(view) {
+    const wrapper = document.getElementById('campaignsWrapper');
+    const gridBtn = document.getElementById('gridBtn');
+    const listBtn = document.getElementById('listBtn');
+
+    currentView = view;
+    localStorage.setItem('campaignView', view);
+
+    if (view === 'grid') {
+      wrapper.className = 'campaigns-grid';
+      cards.forEach(c => c.classList.remove('list-card'));
+      gridBtn.classList.add('active');
+      listBtn.classList.remove('active');
+    } else {
+      wrapper.className = 'campaigns-list';
+      cards.forEach(c => c.classList.add('list-card'));
+      listBtn.classList.add('active');
+      gridBtn.classList.remove('active');
+    }
+  }
+</script>
+
+</body>
+</html>

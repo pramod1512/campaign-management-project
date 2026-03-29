@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ActNow - Home</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #2E8B57;
+      --green-light: #52c987;
+      --green-pale:  #e8f8f0;
+      --blue:        #0077cc;
+      --blue-light:  #e6f3ff;
+      --orange:      #ff9800;
+      --text:        #1a1a2e;
+      --muted:       #666;
+      --white:       #ffffff;
+      --bg:          #f4f9f6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ────────────────────────────────
+       HEADER / NAV
+    ──────────────────────────────── */
+    header {
+      background: var(--white);
+      padding: 14px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      animation: slideDown 0.6s ease;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--blue); }
+
+    nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.25s ease;
+    }
+
+    nav a:hover {
+      background: var(--green-pale);
+      color: var(--green);
+    }
+
+    nav a.active { background: var(--green-pale); color: var(--green); }
+
+    .nav-login {
+      background: var(--green) !important;
+      color: white !important;
+      padding: 8px 18px !important;
+      border-radius: 20px !important;
+    }
+
+    .nav-login:hover {
+      background: #256a45 !important;
+      transform: scale(1.04);
+    }
+
+    .nav-logout {
+      background: #fdecea !important;
+      color: #c0392b !important;
+    }
+
+    .nav-logout:hover {
+      background: #c0392b !important;
+      color: white !important;
+    }
+
+    .nav-user-badge {
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ────────────────────────────────
+       HERO
+    ──────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 92vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      background: linear-gradient(135deg, #e8f8f0 0%, #e6f3ff 60%, #f4f9f6 100%);
+      padding: 80px 20px;
+    }
+
+    /* Floating blobs */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.35;
+      animation: floatBlob linear infinite;
+      pointer-events: none;
+    }
+
+    .blob-1 {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, #52c987, #2E8B57);
+      top: -100px; left: -120px;
+      animation-duration: 14s;
+    }
+
+    .blob-2 {
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, #74b9ff, #0077cc);
+      bottom: -80px; right: -80px;
+      animation-duration: 18s;
+      animation-direction: reverse;
+    }
+
+    .blob-3 {
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, #ffeaa7, #fdcb6e);
+      top: 40%; left: 60%;
+      animation-duration: 22s;
+    }
+
+    .blob-4 {
+      width: 180px; height: 180px;
+      background: radial-gradient(circle, #a29bfe, #6c5ce7);
+      top: 20%; right: 15%;
+      animation-duration: 16s;
+      animation-direction: reverse;
+    }
+
+    /* Doodle SVG shapes */
+    .doodle {
+      position: absolute;
+      opacity: 0.12;
+      pointer-events: none;
+      animation: rotateSlow linear infinite;
+    }
+
+    .doodle-1 { width: 90px; top: 12%; left: 8%; animation-duration: 20s; }
+    .doodle-2 { width: 60px; bottom: 18%; left: 22%; animation-duration: 28s; animation-direction: reverse; }
+    .doodle-3 { width: 70px; top: 25%; right: 10%; animation-duration: 24s; }
+    .doodle-4 { width: 50px; bottom: 28%; right: 22%; animation-duration: 18s; animation-direction: reverse; }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 720px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 6px 18px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 20px;
+      animation: fadeInDown 0.8s ease;
+    }
+
+    .hero h2 {
+      font-size: 52px;
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 18px;
+      animation: fadeInDown 1s ease;
+    }
+
+    .hero h2 .highlight {
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: 18px;
+      color: var(--muted);
+      margin-bottom: 36px;
+      line-height: 1.6;
+      animation: fadeInUp 1.1s ease;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeInUp 1.3s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      color: white;
+      padding: 14px 32px;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 16px rgba(46,139,87,0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(46,139,87,0.4);
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--green);
+      padding: 14px 32px;
+      text-decoration: none;
+      border-radius: 30px;
+      font-weight: 700;
+      font-size: 15px;
+      border: 2px solid var(--green);
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: var(--green-pale);
+      transform: translateY(-3px);
+    }
+
+    /* Hero stats */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin-top: 52px;
+      flex-wrap: wrap;
+      animation: fadeInUp 1.5s ease;
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-num {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--green);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* ────────────────────────────────
+       WHY JOIN
+    ──────────────────────────────── */
+    .why-join {
+      text-align: center;
+      padding: 80px 20px;
+      background: white;
+    }
+
+    .section-tag {
+      display: inline-block;
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    .why-join h2 {
+      color: var(--text);
+      font-size: 34px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .why-join > p {
+      max-width: 620px;
+      margin: 0 auto 48px;
+      font-size: 16px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .reasons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .reason {
+      background: var(--bg);
+      border-radius: 16px;
+      padding: 28px 24px;
+      text-align: left;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      border-bottom: 3px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .reason::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--green), var(--blue));
+      border-radius: 16px 16px 0 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .reason:hover { transform: translateY(-6px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+    .reason:hover::before { opacity: 1; }
+
+    .reason .icon { font-size: 36px; margin-bottom: 14px; display: block; }
+    .reason h3 { color: var(--text); font-size: 16px; margin-bottom: 8px; font-weight: 700; }
+    .reason p  { color: var(--muted); font-size: 14px; line-height: 1.6; }
+
+    /* ────────────────────────────────
+       FEATURED CAMPAIGNS
+    ──────────────────────────────── */
+    .featured {
+      padding: 80px 40px;
+      background: var(--bg);
+      text-align: center;
+    }
+
+    .featured h2 { font-size: 34px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+    .featured > p { color: var(--muted); margin-bottom: 48px; font-size: 15px; }
+
+    .cards-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .fcard {
+      background: white;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+      text-align: left;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .fcard:hover { transform: translateY(-6px); box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
+    .fcard img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+    }
+
+    .fcard-body { padding: 18px 20px; }
+    .fcard-body h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .fcard-body p  { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    .fcard-tag {
+      display: inline-block;
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 3px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    /* ────────────────────────────────
+       INQUIRY SECTION
+    ──────────────────────────────── */
+    .inquiry-section {
+      padding: 80px 20px;
+      background: white;
+    }
+
+    .inquiry-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--bg);
+      border-radius: 20px;
+      padding: 44px 48px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.07);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Blob inside inquiry */
+    .inquiry-inner::before {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(46,139,87,0.12), transparent 70%);
+      top: -100px; right: -80px;
+      pointer-events: none;
+    }
+
+    .inquiry-inner::after {
+      content: '';
+      position: absolute;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,119,204,0.1), transparent 70%);
+      bottom: -60px; left: -40px;
+      pointer-events: none;
+    }
+
+    .inquiry-inner h2 {
+      text-align: center;
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .inquiry-inner > p {
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .inquiry-form {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .inquiry-form input,
+    .inquiry-form textarea {
+      padding: 12px 16px;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: white;
+      transition: border 0.3s, box-shadow 0.3s;
+      color: var(--text);
+    }
+
+    .inquiry-form input:focus,
+    .inquiry-form textarea:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(46,139,87,0.12);
+      outline: none;
+    }
+
+    .inquiry-form textarea { resize: vertical; }
+
+    .inquiry-form button {
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(46,139,87,0.3);
+    }
+
+    .inquiry-form button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46,139,87,0.4);
+    }
+
+    /* ────────────────────────────────
+       FOOTER
+    ──────────────────────────────── */
+    footer {
+      background: var(--text);
+      color: #aaa;
+      text-align: center;
+      padding: 24px;
+      font-size: 13px;
+    }
+
+    footer span { color: var(--green-light); }
+
+    /* ────────────────────────────────
+       ANIMATIONS
+    ──────────────────────────────── */
+    @keyframes slideDown {
+      from { transform: translateY(-40px); opacity: 0; }
+      to   { transform: translateY(0);     opacity: 1; }
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatBlob {
+      0%   { transform: translate(0px,   0px)   scale(1);    }
+      25%  { transform: translate(30px,  -20px) scale(1.05); }
+      50%  { transform: translate(-20px, 30px)  scale(0.97); }
+      75%  { transform: translate(20px,  20px)  scale(1.03); }
+      100% { transform: translate(0px,   0px)   scale(1);    }
+    }
+
+    @keyframes rotateSlow {
+      from { transform: rotate(0deg);   }
+      to   { transform: rotate(360deg); }
+    }
+
+    @keyframes countUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ────────────────────────────────
+       RESPONSIVE
+    ──────────────────────────────── */
+    @media (max-width: 768px) {
+      .hero h2    { font-size: 34px; }
+      .hero-stats { gap: 24px; }
+      header      { padding: 12px 20px; }
+      .featured   { padding: 60px 20px; }
+      .inquiry-inner { padding: 32px 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h2  { font-size: 28px; }
+      nav a     { font-size: 12px; padding: 6px 10px; }
+      .logo     { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════
+     HEADER
+════════════════════════════════ -->
+<header>
+  <a href="/" class="logo">Act<span>Now</span></a>
+  <nav>
+    <a href="/" class="active">Home</a>
+    <a href="/campaigns">Campaigns</a>
+    <a href="/about_contact">About / Contact</a>
+
+    {% if session.get('role') == 'Volunteer' %}
+      <a href="/volunteer_registration">My Campaigns</a>
+      <span class="nav-user-badge">👤 {{ session.get('user_name', '').split()[0] }}</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+
+    {% elif session.get('role') == 'Organizer' %}
+      <a href="/organizer_dashboard">Dashboard</a>
+      <span class="nav-user-badge">🏢 {{ session.get('org_name', '').split()[0] }}</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+
+    {% elif session.get('role') == 'Admin' %}
+      <a href="/admin_dashboard">Admin Panel</a>
+      <span class="nav-user-badge">🛡️ Admin</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+
+    {% else %}
+      <a href="/loginpage" class="nav-login">Login / Register</a>
+    {% endif %}
+  </nav>
+</header>
+
+
+<!-- ═══════════════════════════════
+     HERO
+════════════════════════════════ -->
+<section class="hero">
+  <!-- Floating blobs -->
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+
+  <!-- Doodle SVGs -->
+  <svg class="doodle doodle-1" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="50" cy="50" r="40" stroke="#2E8B57" stroke-width="6" stroke-dasharray="12 8"/>
+    <circle cx="50" cy="50" r="22" stroke="#0077cc" stroke-width="4" stroke-dasharray="8 6"/>
+  </svg>
+
+  <svg class="doodle doodle-2" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="15" y="15" width="70" height="70" rx="12" stroke="#2E8B57" stroke-width="6" stroke-dasharray="10 6"/>
+    <rect x="32" y="32" width="36" height="36" rx="6"  stroke="#52c987" stroke-width="4"/>
+  </svg>
+
+  <svg class="doodle doodle-3" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon points="50,10 90,80 10,80" stroke="#0077cc" stroke-width="6" stroke-dasharray="10 7" fill="none"/>
+  </svg>
+
+  <svg class="doodle doodle-4" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M20 50 Q50 10 80 50 Q50 90 20 50Z" stroke="#52c987" stroke-width="5" fill="none" stroke-dasharray="8 5"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-tag">🌿 Making a Difference Together</div>
+    <h2>Join Hands,<br><span class="highlight">Create Change</span></h2>
+    <p>ActNow connects passionate volunteers with meaningful campaigns.<br>
+       Together, we build stronger, greener, and kinder communities.</p>
+
+    <div class="hero-btns">
+      <a href="/campaigns" class="btn-primary">🚀 Explore Campaigns</a>
+      <a href="/about_contact" class="btn-secondary">Learn More</a>
+    </div>
+
+<!--    <div class="hero-stats">-->
+<!--      <div class="stat">-->
+<!--        <div class="stat-num" id="stat1">0</div>-->
+<!--        <div class="stat-label">Campaigns Launched</div>-->
+<!--      </div>-->
+<!--      <div class="stat">-->
+<!--        <div class="stat-num" id="stat2">0</div>-->
+<!--        <div class="stat-label">Volunteers Joined</div>-->
+<!--      </div>-->
+<!--      <div class="stat">-->
+<!--        <div class="stat-num" id="stat3">0</div>-->
+<!--        <div class="stat-label">Communities Reached</div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+</section>
+
+
+<!-- ═══════════════════════════════
+     WHY JOIN
+════════════════════════════════ -->
+<section class="why-join reveal">
+  <div class="section-tag">Why ActNow?</div>
+  <h2>Why Should You Participate?</h2>
+  <p>Campaigns are not just events — they are movements that create real impact. By joining, you contribute to society, build connections, and inspire others to act.</p>
+
+  <div class="reasons">
+    <div class="reason">
+      <span class="icon">🌱</span>
+      <h3>Environmental Impact</h3>
+      <p>Protect our planet through green initiatives and eco-friendly drives that make a lasting difference.</p>
+    </div>
+    <div class="reason">
+      <span class="icon">🤝</span>
+      <h3>Community Building</h3>
+      <p>Strengthen local connections and create a sense of unity, belonging, and compassion.</p>
+    </div>
+    <div class="reason">
+      <span class="icon">🎓</span>
+      <h3>Personal Growth</h3>
+      <p>Gain hands-on experience, leadership skills, and a deeper sense of responsibility.</p>
+    </div>
+    <div class="reason">
+      <span class="icon">💡</span>
+      <h3>Inspire Change</h3>
+      <p>Every small action motivates others to follow and make a difference in the world.</p>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════
+     FEATURED CAMPAIGNS
+════════════════════════════════ -->
+<section class="featured reveal">
+  <div class="section-tag">Featured</div>
+  <h2>Spotlight Campaigns</h2>
+  <p>A glimpse of the impactful campaigns happening around you</p>
+
+  <div class="cards-row">
+    <div class="fcard">
+      <img src="{{ url_for('static', filename='images/tree 1.jpeg') }}" alt="Tree Plantation" onerror="this.src='https://via.placeholder.com/300x190?text=Tree+Plantation'">
+      <div class="fcard-body">
+        <span class="fcard-tag">🌳 Environment</span>
+        <h3>Tree Plantation Drive</h3>
+        <p>Join us in making the city greener, healthier, and more sustainable for future generations.</p>
+      </div>
+    </div>
+    <div class="fcard">
+      <img src="{{ url_for('static', filename='images/digital literacy.jpeg') }}" alt="Digital Literacy" onerror="this.src='https://via.placeholder.com/300x190?text=Digital+Literacy'">
+      <div class="fcard-body">
+        <span class="fcard-tag">💻 Education</span>
+        <h3>Digital Literacy Workshop</h3>
+        <p>Empowering students and communities with essential computer and internet skills.</p>
+      </div>
+    </div>
+    <div class="fcard">
+      <img src="{{ url_for('static', filename='images/water 1.jpeg') }}" alt="Clean Water" onerror="this.src='https://via.placeholder.com/300x190?text=Clean+Water'">
+      <div class="fcard-body">
+        <span class="fcard-tag">💧 Health</span>
+        <h3>Clean Water Awareness</h3>
+        <p>Helping villages understand and access safe, clean drinking water for a healthier life.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════
+     INQUIRY
+════════════════════════════════ -->
+<section class="inquiry-section reveal">
+  <div class="inquiry-inner">
+    <h2>💬 Have a Question?</h2>
+    <p>We'd love to hear from you. Send us a message and we'll get back to you soon.</p>
+
+    <form class="inquiry-form" action="/inquiries" method="GET">
+      <input type="text"  name="name"    placeholder="Your Name"     required>
+      <input type="email" name="email"   placeholder="Your Email"    required>
+      <textarea           name="message" placeholder="Your Message..." rows="5" required></textarea>
+      <button type="submit">📨 Send Message</button>
+    </form>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════
+     FOOTER
+════════════════════════════════ -->
+<footer>
+  <p>&copy; 2025 <span>ActNOW</span> | All Rights Reserved &nbsp;|&nbsp; Made with ❤️ for a better world</p>
+</footer>
+
+
+<script>
+  // ── Scroll Reveal ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // ── Animated Counter ──
+  function animateCount(el, target, suffix = '+', duration = 1800) {
+    let start = 0;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) {
+        el.textContent = target + suffix;
+        clearInterval(timer);
+      } else {
+        el.textContent = Math.floor(start) + suffix;
+      }
+    }, 16);
+  }
+
+  // Trigger counters when hero stats come into view
+  const statsObserver = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCount(document.getElementById('stat1'), 120);
+        animateCount(document.getElementById('stat2'), 850);
+        animateCount(document.getElementById('stat3'), 45);
+        statsObserver.disconnect();
+      }
+    });
+  }, { threshold: 0.5 });
+
+  const statsEl = document.querySelector('.hero-stats');
+  if (statsEl) statsObserver.observe(statsEl);
+</script>
+
+</body>
+</html>

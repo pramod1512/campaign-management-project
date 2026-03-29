@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ActNow | View Inquiries</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #2E8B57;
+      --green-light: #52c987;
+      --green-pale:  #e8f8f0;
+      --blue:        #0077cc;
+      --blue-light:  #e6f3ff;
+      --text:        #1a1a2e;
+      --muted:       #666;
+      --white:       #ffffff;
+      --bg:          #f4f9f6;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--white);
+      padding: 14px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+
+    .logo { font-size: 24px; font-weight: 800; color: var(--green); letter-spacing: 1px; text-decoration: none; }
+    .logo span { color: var(--blue); }
+
+    .back-btn { background: var(--blue-light); color: var(--blue); text-decoration: none; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 700; transition: all 0.3s; }
+    .back-btn:hover { background: var(--blue); color: white; }
+
+    main { flex: 1; max-width: 900px; margin: 36px auto; padding: 0 24px; width: 100%; }
+
+    .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 14px; }
+    .page-header h2 { font-size: 22px; font-weight: 800; color: var(--text); }
+    .page-header h2 span { color: var(--blue); }
+
+    .count-pill { background: var(--blue-light); color: var(--blue); padding: 5px 14px; border-radius: 20px; font-size: 13px; font-weight: 700; }
+
+    .search-wrap { position: relative; margin-bottom: 24px; }
+    .search-wrap span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 15px; pointer-events: none; }
+    .search-wrap input {
+      width: 100%; padding: 11px 14px 11px 40px; border: 1.5px solid #ddd; border-radius: 10px;
+      font-size: 14px; font-family: inherit; background: var(--white); color: var(--text);
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+    .search-wrap input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,119,204,0.1); outline: none; }
+
+    /* ── INQUIRY CARDS ── */
+    .inquiry-list { display: flex; flex-direction: column; gap: 16px; }
+
+    .inquiry-card {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 22px 24px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-left 0.25s;
+      border-left: 4px solid transparent;
+      animation: fadeUp 0.4s ease;
+    }
+
+    .inquiry-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      border-left-color: var(--blue);
+    }
+
+    .inquiry-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .inq-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--blue), #0099ff);
+      color: white; display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 700; flex-shrink: 0;
+    }
+
+    .inq-meta h3 { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+    .inq-meta p  { font-size: 13px; color: var(--muted); }
+
+    .inq-number {
+      margin-left: auto;
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .inq-message {
+      background: var(--bg);
+      border-radius: 10px;
+      padding: 14px 16px;
+      font-size: 14px;
+      color: #444;
+      line-height: 1.6;
+      border-left: 3px solid var(--blue-light);
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 70px 20px;
+    }
+
+    .empty-icon-wrap {
+      width: 90px; height: 90px; border-radius: 50%;
+      background: var(--blue-light);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px; font-size: 40px;
+    }
+
+    .empty-state h3 { font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .empty-state p  { font-size: 14px; color: var(--muted); }
+
+    footer { background: var(--text); color: #aaa; text-align: center; padding: 20px; font-size: 13px; margin-top: auto; }
+    footer span { color: var(--green-light); }
+
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    @media (max-width: 600px) { header { padding: 12px 20px; } main { padding: 0 16px; margin-top: 24px; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Act<span>Now</span></a>
+  <a href="/admin_dashboard" class="back-btn">← Dashboard</a>
+</header>
+
+<main>
+  <div class="page-header">
+    <h2>💬 <span>Inquiries</span></h2>
+    <span class="count-pill" id="countPill">Loading...</span>
+  </div>
+
+  <div class="search-wrap">
+    <span>🔍</span>
+    <input type="text" id="searchInput" placeholder="Search by name, email or message..." oninput="filterCards()">
+  </div>
+
+  {% if result %}
+  <div class="inquiry-list" id="inquiryList">
+    {% for info in result %}
+    <div class="inquiry-card" data-text="{{ info[1] }} {{ info[2] }} {{ info[3] }}">
+      <div class="inquiry-header">
+        <div class="inq-avatar">{{ info[1][0].upper() }}</div>
+        <div class="inq-meta">
+          <h3>{{ info[1] }}</h3>
+          <p>📧 {{ info[2] }}</p>
+        </div>
+        <span class="inq-number">#{{ loop.index }}</span>
+      </div>
+      <div class="inq-message">
+        💬 {{ info[3] }}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="empty-state">
+    <div class="empty-icon-wrap">💬</div>
+    <h3>No Inquiries Yet</h3>
+    <p>No messages have been submitted by users yet.</p>
+  </div>
+  {% endif %}
+
+</main>
+
+<footer>
+  <p>&copy; 2025 <span>ActNOW</span> | Admin Panel</p>
+</footer>
+
+<script>
+  const cards = document.querySelectorAll('.inquiry-card');
+  document.getElementById('countPill').textContent = cards.length + ' message' + (cards.length !== 1 ? 's' : '');
+
+  function filterCards() {
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    let visible = 0;
+    cards.forEach(card => {
+      const show = card.dataset.text.toLowerCase().includes(q);
+      card.style.display = show ? '' : 'none';
+      if (show) visible++;
+    });
+    document.getElementById('countPill').textContent = visible + ' message' + (visible !== 1 ? 's' : '');
+  }
+</script>
+
+</body>
+</html>

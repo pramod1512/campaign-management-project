@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Enrolled Campaigns | ActNOW</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #2E8B57;
+      --green-light: #52c987;
+      --green-pale:  #e8f8f0;
+      --blue:        #0077cc;
+      --blue-light:  #e6f3ff;
+      --text:        #1a1a2e;
+      --muted:       #666;
+      --white:       #ffffff;
+      --bg:          #f4f9f6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      padding: 14px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      animation: slideDown 0.6s ease;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+    .logo span { color: var(--blue); }
+
+    nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+
+    nav a {
+      color: var(--text);
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 14px;
+      transition: all 0.25s ease;
+    }
+
+    nav a:hover, nav a.active { background: var(--green-pale); color: var(--green); }
+
+    .nav-login {
+      background: var(--green) !important;
+      color: white !important;
+      padding: 8px 18px !important;
+      border-radius: 20px !important;
+    }
+    .nav-login:hover  { background: #256a45 !important; }
+    .nav-logout       { background: #fdecea !important; color: #c0392b !important; }
+    .nav-logout:hover { background: #c0392b !important; color: white !important; }
+    .nav-user-badge {
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      position: relative;
+      background: linear-gradient(135deg, #e8f8f0 0%, #e6f3ff 60%, #f4f9f6 100%);
+      padding: 48px 20px 52px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(55px);
+      opacity: 0.28;
+      animation: floatBlob linear infinite;
+      pointer-events: none;
+    }
+    .blob-1 { width: 280px; height: 280px; background: radial-gradient(circle,#52c987,#2E8B57); top:-80px; left:-60px; animation-duration:14s; }
+    .blob-2 { width: 220px; height: 220px; background: radial-gradient(circle,#74b9ff,#0077cc); bottom:-50px; right:-50px; animation-duration:18s; animation-direction:reverse; }
+
+    .page-hero-content { position: relative; z-index: 10; }
+
+    .page-tag {
+      display: inline-block;
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .page-hero h1 {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .page-hero h1 span {
+      background: linear-gradient(135deg, var(--green), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-hero p { font-size: 15px; color: var(--muted); }
+
+    /* ── MAIN CONTAINER ── */
+    .container {
+      flex: 1;
+      max-width: 1000px;
+      margin: 36px auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* ── STATS ROW ── */
+    .stats-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 28px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background: var(--white);
+      border-radius: 14px;
+      padding: 18px 24px;
+      flex: 1;
+      min-width: 140px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      text-align: center;
+      border-top: 3px solid var(--green);
+      animation: fadeUp 0.4s ease;
+    }
+
+    .stat-num   { font-size: 32px; font-weight: 800; color: var(--green); }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    /* ── TABLE CARD ── */
+    .table-card {
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      overflow: hidden;
+      animation: fadeUp 0.5s ease;
+    }
+
+    .table-card-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-card-header h3 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .table-card-header span {
+      background: var(--green-pale);
+      color: var(--green);
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    /* ── TABLE ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead tr {
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+    }
+
+    thead th {
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 700;
+      color: white;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #f5f5f5;
+      transition: background 0.2s ease;
+    }
+
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: var(--green-pale); }
+
+    tbody td {
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .td-title {
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .td-organizer { color: var(--green); font-weight: 600; }
+
+    .td-date {
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 70px 20px;
+    }
+
+    .empty-icon-wrap {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: var(--green-pale);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 46px;
+      animation: pulse 2s ease infinite;
+    }
+
+    .empty-state h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.6;
+    }
+
+    .explore-btn {
+      background: linear-gradient(135deg, var(--green), var(--green-light));
+      color: white;
+      padding: 12px 28px;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(46,139,87,0.3);
+      display: inline-block;
+    }
+
+    .explore-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(46,139,87,0.4);
+    }
+
+    /* ── BACK BUTTON ── */
+    .back-wrap {
+      text-align: center;
+      margin-top: 24px;
+      margin-bottom: 8px;
+    }
+
+    .back-btn {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .back-btn:hover { color: var(--green); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: #aaa;
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      margin-top: auto;
+    }
+    footer span { color: var(--green-light); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes slideDown {
+      from { transform: translateY(-40px); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes floatBlob {
+      0%   { transform: translate(0,0)       scale(1);    }
+      25%  { transform: translate(25px,-18px) scale(1.04); }
+      50%  { transform: translate(-18px,25px) scale(0.97); }
+      75%  { transform: translate(18px,18px)  scale(1.03); }
+      100% { transform: translate(0,0)       scale(1);    }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.06); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      header { padding: 12px 20px; }
+      .container { padding: 0 16px; }
+      .page-hero h1 { font-size: 26px; }
+      thead th, tbody td { padding: 10px 12px; font-size: 13px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header>
+  <a href="/" class="logo">Act<span>Now</span></a>
+  <nav>
+    <a href="/">Home</a>
+    <a href="/campaigns">Campaigns</a>
+    <a href="/about_contact">About / Contact</a>
+    <a href="/volunteer_registration" class="active">My Campaigns</a>
+
+
+    {% if session.get('role') == 'Volunteer' %}
+      <span class="nav-user-badge">👤 {{ session.get('user_name', '').split()[0] }}</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+    {% elif session.get('role') == 'Organizer' %}
+      <a href="/organizer_dashboard">Dashboard</a>
+      <span class="nav-user-badge">🏢 {{ session.get('org_name', '').split()[0] }}</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+    {% elif session.get('role') == 'Admin' %}
+      <a href="/admin_dashboard">Admin Panel</a>
+      <span class="nav-user-badge">🛡️ Admin</span>
+      <a href="/logout" class="nav-logout">Logout</a>
+    {% else %}
+      <a href="/loginpage" class="nav-login">Login / Register</a>
+    {% endif %}
+  </nav>
+</header>
+
+<!-- ═══════════ HERO ═══════════ -->
+<section class="page-hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="page-hero-content">
+    <div class="page-tag">🌿 Your Journey</div>
+    <h1>My <span>Enrolled Campaigns</span></h1>
+    <p>Track all the campaigns you've signed up for</p>
+  </div>
+</section>
+
+<!-- ═══════════ MAIN ═══════════ -->
+<div class="container">
+
+  {% if result %}
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-box">
+        <div class="stat-num">{{ result|length }}</div>
+        <div class="stat-label">Campaigns Enrolled</div>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+      <div class="table-card-header">
+        <h3>📋 Enrollment History</h3>
+        <span>{{ result|length }} record{% if result|length != 1 %}s{% endif %}</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Campaign Title</th>
+            <th>Organizer</th>
+            <th>Address</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for info in result %}
+          <tr>
+            <td style="color:var(--muted); font-weight:600;">{{ loop.index }}</td>
+            <td class="td-title">{{ info[1] }}</td>
+            <td class="td-organizer">{{ info[2] }}</td>
+            <td style="color:var(--muted);">{{ info[3] }}</td>
+            <td><span class="td-date">📅 {{ info[4] }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% else %}
+
+    <!-- Empty State -->
+    <div class="empty-state">
+      <div class="empty-icon-wrap">🌱</div>
+      <h3>No Campaigns Yet!</h3>
+      <p>You haven't enrolled in any campaigns yet.<br>
+         Explore our campaigns and start making a difference today!</p>
+      <a href="/campaigns" class="explore-btn">🚀 Explore Campaigns</a>
+    </div>
+
+  {% endif %}
+
+  <div class="back-wrap">
+    <a href="/campaigns" class="back-btn">← Back to Campaigns</a>
+  </div>
+
+</div>
+
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer>
+  <p>&copy; 2025 <span>ActNOW</span> | All Rights Reserved &nbsp;|&nbsp; Made with ❤️ for a better world</p>
+</footer>
+
+<script>
+  // Scroll reveal for table
+  const tableCard = document.querySelector('.table-card');
+  if (tableCard) {
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.style.opacity = '1';
+          e.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+    obs.observe(tableCard);
+  }
+</script>
+
+</body>
+</html>

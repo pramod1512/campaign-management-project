@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ActNow | Admin Dashboard</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:       #2E8B57;
+      --green-light: #52c987;
+      --green-pale:  #e8f8f0;
+      --blue:        #0077cc;
+      --blue-light:  #e6f3ff;
+      --text:        #1a1a2e;
+      --muted:       #666;
+      --white:       #ffffff;
+      --bg:          #f4f9f6;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--white);
+      padding: 14px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      animation: slideDown 0.6s ease;
+    }
+
+    .logo {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: 1px;
+      text-decoration: none;
+    }
+    .logo span { color: var(--blue); }
+
+    .header-right { display: flex; align-items: center; gap: 12px; }
+
+    .admin-badge {
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .logout-btn {
+      background: #fdecea;
+      color: #c0392b;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 700;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+    .logout-btn:hover { background: #c0392b; color: white; }
+
+    /* ── PAGE HERO ── */
+    .page-hero {
+      position: relative;
+      background: linear-gradient(135deg, #e6f3ff 0%, #e8f8f0 60%, #f4f9f6 100%);
+      padding: 48px 36px 52px;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(55px);
+      opacity: 0.25;
+      animation: floatBlob linear infinite;
+      pointer-events: none;
+    }
+    .blob-1 { width: 300px; height: 300px; background: radial-gradient(circle,#74b9ff,#0077cc); top:-100px; left:-80px; animation-duration:14s; }
+    .blob-2 { width: 240px; height: 240px; background: radial-gradient(circle,#52c987,#2E8B57); bottom:-60px; right:-60px; animation-duration:18s; animation-direction:reverse; }
+
+    .hero-content { position: relative; z-index: 10; }
+
+    .page-tag {
+      display: inline-block;
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .page-hero h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .page-hero h1 span {
+      background: linear-gradient(135deg, var(--blue), var(--green));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-hero p { font-size: 15px; color: var(--muted); }
+
+    /* ── MAIN ── */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 36px 36px 48px;
+      width: 100%;
+    }
+
+    /* ── STATS GRID ── */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: fadeUp 0.5s ease;
+      border-top: 4px solid transparent;
+    }
+
+    .stat-card:hover { transform: translateY(-5px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
+
+    .stat-card.blue   { border-top-color: var(--blue); }
+    .stat-card.green  { border-top-color: var(--green); }
+    .stat-card.orange { border-top-color: #e67e22; }
+    .stat-card.purple { border-top-color: #6c5ce7; }
+
+    .stat-icon { font-size: 36px; margin-bottom: 12px; display: block; }
+
+    .stat-num {
+      font-size: 42px;
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .stat-card.blue   .stat-num { color: var(--blue); }
+    .stat-card.green  .stat-num { color: var(--green); }
+    .stat-card.orange .stat-num { color: #e67e22; }
+    .stat-card.purple .stat-num { color: #6c5ce7; }
+
+    .stat-label { font-size: 13px; color: var(--muted); font-weight: 600; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #eee;
+    }
+
+    /* ── ACTION CARDS ── */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 20px;
+    }
+
+    .action-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 28px 22px;
+      text-align: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.07);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-bottom 0.3s;
+      border-bottom: 4px solid transparent;
+      animation: fadeUp 0.6s ease;
+    }
+
+    .action-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+      border-bottom-color: var(--blue);
+    }
+
+    .action-card .a-icon { font-size: 40px; margin-bottom: 14px; display: block; }
+    .action-card h3 { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .action-card p  { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
+
+    .action-card .count-badge {
+      display: inline-block;
+      background: var(--blue-light);
+      color: var(--blue);
+      padding: 3px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .action-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--blue), #0099ff);
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .action-btn:hover {
+      background: linear-gradient(135deg, #005fa3, var(--blue));
+      transform: scale(1.03);
+      box-shadow: 0 4px 12px rgba(0,119,204,0.3);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--text);
+      color: #aaa;
+      text-align: center;
+      padding: 20px;
+      font-size: 13px;
+      margin-top: auto;
+    }
+    footer span { color: var(--green-light); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes slideDown { from { transform: translateY(-40px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeUp    { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes floatBlob {
+      0%   { transform: translate(0,0) scale(1); }
+      25%  { transform: translate(25px,-18px) scale(1.04); }
+      50%  { transform: translate(-18px,25px) scale(0.97); }
+      75%  { transform: translate(18px,18px) scale(1.03); }
+      100% { transform: translate(0,0) scale(1); }
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 12px 20px; }
+      main { padding: 24px 16px; }
+      .page-hero { padding: 36px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="/" class="logo">Act<span>Now</span></a>
+  <div class="header-right">
+    <span class="admin-badge">🛡️ Admin Panel</span>
+    <a href="/logout" class="logout-btn">Logout</a>
+  </div>
+</header>
+
+<div class="page-hero">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="hero-content">
+    <div class="page-tag">🛡️ Admin Control Center</div>
+    <h1>Welcome, <span>Admin</span> 👋</h1>
+    <p>Manage volunteers, organizers, campaigns and inquiries from one place.</p>
+  </div>
+</div>
+
+<main>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card blue">
+      <span class="stat-icon">👥</span>
+      <div class="stat-num" id="s1">0</div>
+      <div class="stat-label">Volunteers</div>
+    </div>
+    <div class="stat-card green">
+      <span class="stat-icon">🧑‍💼</span>
+      <div class="stat-num" id="s2">0</div>
+      <div class="stat-label">Organizers</div>
+    </div>
+    <div class="stat-card orange">
+      <span class="stat-icon">📢</span>
+      <div class="stat-num" id="s3">0</div>
+      <div class="stat-label">Campaigns</div>
+    </div>
+    <div class="stat-card purple">
+      <span class="stat-icon">💬</span>
+      <div class="stat-num" id="s4">0</div>
+      <div class="stat-label">Inquiries</div>
+    </div>
+  </div>
+
+  <!-- Action Cards -->
+  <div class="section-title">Quick Actions</div>
+  <div class="action-grid">
+
+    <div class="action-card">
+      <span class="a-icon">👥</span>
+      <h3>View Volunteers</h3>
+      <div class="count-badge">{{ vol_count }} registered</div>
+      <p>Check details of all registered volunteers on the platform.</p>
+      <form action="/view_volunteer">
+        <button class="action-btn">Go to Volunteers →</button>
+      </form>
+    </div>
+
+    <div class="action-card">
+      <span class="a-icon">🧑‍💼</span>
+      <h3>View Organizers</h3>
+      <div class="count-badge">{{ org_count }} registered</div>
+      <p>View all organizer accounts and their details.</p>
+      <form action="/view_organizer">
+        <button class="action-btn">Go to Organizers →</button>
+      </form>
+    </div>
+
+    <div class="action-card">
+      <span class="a-icon">📢</span>
+      <h3>Manage Campaigns</h3>
+      <div class="count-badge">{{ campaign_count }} campaigns</div>
+      <p>Monitor and manage all campaigns on the platform.</p>
+      <form action="/view_campaigns">
+        <button class="action-btn">View Campaigns →</button>
+      </form>
+    </div>
+
+    <div class="action-card">
+      <span class="a-icon">💬</span>
+      <h3>View Inquiries</h3>
+      <div class="count-badge">{{ inquiry_count }} messages</div>
+      <p>Read and respond to messages sent by users.</p>
+      <form action="/view_inquiries">
+        <button class="action-btn">View Inquiries →</button>
+      </form>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <p>&copy; 2025 <span>ActNOW</span> | Admin Panel</p>
+</footer>
+
+<script>
+  function animateCount(elId, target, duration = 1500) {
+    const el = document.getElementById(elId);
+    let start = 0;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { el.textContent = target; clearInterval(timer); }
+      else { el.textContent = Math.floor(start); }
+    }, 16);
+  }
+
+  animateCount('s1', {{ vol_count }});
+  animateCount('s2', {{ org_count }});
+  animateCount('s3', {{ campaign_count }});
+  animateCount('s4', {{ inquiry_count }});
+</script>
+
+</body>
+</html>
