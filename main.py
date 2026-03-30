@@ -142,7 +142,7 @@ def campaign_search():
 
     cursor.execute(query, params)
     result = cursor.fetchall()
-    return render_template('campaigns.html', result=result))
+    return render_template('campaigns.html', result=result)
 
 
 # ─────────────────────────────────────────
