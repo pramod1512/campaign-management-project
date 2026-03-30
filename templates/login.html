@@ -24,7 +24,6 @@
       height: 100%;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: var(--bg);
-      overflow: hidden;
     }
 
     /* ── BLOBS ── */
@@ -37,7 +36,6 @@
       pointer-events: none;
       z-index: 0;
     }
-
     .blob-1 { width: 420px; height: 420px; background: radial-gradient(circle, #52c987, #2E8B57); top: -140px; left: -120px; animation-duration: 14s; }
     .blob-2 { width: 340px; height: 340px; background: radial-gradient(circle, #74b9ff, #0077cc); bottom: -100px; right: -80px; animation-duration: 18s; animation-direction: reverse; }
     .blob-3 { width: 220px; height: 220px; background: radial-gradient(circle, #ffeaa7, #fdcb6e); top: 45%; left: 55%; animation-duration: 22s; }
@@ -52,7 +50,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 30px 20px;
     }
 
     /* ── LOGO ── */
@@ -65,7 +63,6 @@
       letter-spacing: 1px;
       animation: fadeInDown 0.6s ease;
     }
-
     .logo span { color: var(--blue); }
 
     /* ── CARD ── */
@@ -73,63 +70,70 @@
       background: rgba(255,255,255,0.92);
       backdrop-filter: blur(12px);
       border-radius: 22px;
-      padding: 36px 38px;
       width: 100%;
-      max-width: 420px;
+      max-width: 440px;
       box-shadow: 0 12px 40px rgba(0,0,0,0.12);
       animation: fadeInUp 0.6s ease;
       overflow: hidden;
       position: relative;
     }
 
-    /* ── SLIDER WRAPPER ── */
-    .slider {
-      display: flex;
-      width: 200%;
-      transition: transform 0.45s cubic-bezier(0.77, 0, 0.175, 1);
+    /* ── TAB SWITCHER ── */
+    .tab-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-bottom: 2px solid #f0f0f0;
     }
 
-    .slider.show-register { transform: translateX(-50%); }
-
-    .form-panel {
-      width: 50%;
-      flex-shrink: 0;
-      min-width: 0;
-      overflow: hidden;
+    .tab-btn {
+      padding: 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--muted);
+      background: none;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      letter-spacing: 0.3px;
     }
+
+    .tab-btn.active {
+      color: var(--green);
+      background: var(--green-pale);
+      border-bottom: 2px solid var(--green);
+      margin-bottom: -2px;
+    }
+
+    .tab-btn:hover:not(.active) { background: #f9f9f9; color: var(--text); }
+
+    /* ── PANELS ── */
+    .panel { display: none; padding: 28px 32px 32px; }
+    .panel.active { display: block; animation: fadeInUp 0.35s ease; }
 
     /* ── FORM HEADER ── */
-    .form-header { text-align: center; margin-bottom: 24px; }
-
-    .form-header h2 {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 6px;
-    }
-
-    .form-header p { font-size: 13px; color: var(--muted); }
+    .form-header { text-align: center; margin-bottom: 22px; }
+    .form-header h2 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 5px; }
+    .form-header p  { font-size: 13px; color: var(--muted); }
 
     /* ── ROLE CARDS ── */
     .role-label {
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .role-cards {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
       gap: 8px;
       margin-bottom: 18px;
     }
 
-    /* Register has only 2 roles */
-    .role-cards.reg-roles {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .role-cards.login-roles   { grid-template-columns: repeat(3, 1fr); }
+    .role-cards.reg-roles     { grid-template-columns: repeat(2, 1fr); }
 
     .role-card {
       padding: 10px 6px;
@@ -140,48 +144,44 @@
       transition: all 0.25s ease;
       background: var(--bg);
       user-select: none;
-      min-width: 0;
     }
 
     .role-card .r-icon  { font-size: 20px; display: block; margin-bottom: 4px; }
-    .role-card .r-label { font-size: 11px; font-weight: 700; color: var(--muted); white-space: nowrap; }
+    .role-card .r-label { font-size: 11px; font-weight: 700; color: var(--muted); }
 
     .role-card:hover { border-color: var(--green); background: var(--green-pale); }
-
     .role-card.selected {
       border-color: var(--green);
       background: var(--green-pale);
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(46,139,87,0.2);
     }
-
     .role-card.selected .r-label { color: var(--green); }
 
-    /* Hidden role input */
     input[name="role"] { display: none; }
 
     /* ── FORM FIELDS ── */
-    .field { margin-bottom: 14px; }
+    .field { margin-bottom: 13px; }
 
     .field label {
       display: block;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 700;
       color: var(--text);
-      margin-bottom: 6px;
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
     }
 
     .input-wrap {
       position: relative;
       display: flex;
       align-items: center;
-      width: 100%;
     }
 
     .input-wrap input {
       width: 100%;
-      min-width: 0;
-      padding: 11px 40px 11px 14px;
+      padding: 10px 40px 10px 14px;
       border: 1.5px solid #ddd;
       border-radius: 10px;
       font-size: 14px;
@@ -198,20 +198,48 @@
       background: white;
     }
 
+    /* inputs without icon */
+    .field input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1.5px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      background: var(--bg);
+      color: var(--text);
+      transition: border 0.3s, box-shadow 0.3s;
+    }
+
+    .field input:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(46,139,87,0.12);
+      outline: none;
+      background: white;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    /* ── HIDDEN FIELD (org name shown only for organizer) ── */
+    .org-only { display: none; }
+
+    /* ── TOGGLE PW ── */
     .toggle-pw {
       position: absolute;
       right: 12px;
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 16px;
+      font-size: 15px;
       padding: 0;
       color: var(--muted);
-      width: auto;
       line-height: 1;
       transition: color 0.2s;
     }
-
     .toggle-pw:hover { color: var(--green); }
 
     /* ── ERROR MESSAGE ── */
@@ -228,7 +256,6 @@
       align-items: center;
       gap: 8px;
     }
-
     .error-msg.show { display: flex; animation: shake 0.4s ease; }
 
     /* ── SUBMIT BUTTON ── */
@@ -242,67 +269,31 @@
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 4px;
+      margin-top: 6px;
       transition: all 0.3s ease;
       box-shadow: 0 4px 14px rgba(46,139,87,0.3);
-      letter-spacing: 0.3px;
     }
-
-    .submit-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(46,139,87,0.4);
-    }
+    .submit-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(46,139,87,0.4); }
 
     /* ── DIVIDER ── */
     .divider {
       display: flex;
       align-items: center;
       gap: 12px;
-      margin: 16px 0;
+      margin: 14px 0;
       color: #ccc;
       font-size: 12px;
     }
+    .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: #e8e8e8; }
 
-    .divider::before, .divider::after {
-      content: '';
-      flex: 1;
-      height: 1px;
-      background: #e8e8e8;
-    }
-
-    /* ── SWITCH LINK ── */
-    .switch-text {
-      text-align: center;
-      font-size: 13px;
-      color: var(--muted);
-      margin-top: 4px;
-    }
-
-    .switch-text a {
-      color: var(--green);
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .switch-text a:hover { color: #256a45; text-decoration: underline; }
+    /* ── SWITCH TEXT ── */
+    .switch-text { text-align: center; font-size: 13px; color: var(--muted); }
+    .switch-text a { color: var(--green); font-weight: 700; text-decoration: none; cursor: pointer; }
+    .switch-text a:hover { text-decoration: underline; }
 
     /* ── HOME LINK ── */
-    .home-link {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 13px;
-      animation: fadeInUp 0.8s ease;
-    }
-
-    .home-link a {
-      color: var(--muted);
-      text-decoration: none;
-      font-weight: 600;
-      transition: color 0.2s;
-    }
-
+    .home-link { text-align: center; margin-top: 20px; font-size: 13px; animation: fadeInUp 0.8s ease; }
+    .home-link a { color: var(--muted); text-decoration: none; font-weight: 600; transition: color 0.2s; }
     .home-link a:hover { color: var(--green); }
 
     /* ── ANIMATIONS ── */
@@ -313,17 +304,14 @@
       75%  { transform: translate(18px,18px)  scale(1.03); }
       100% { transform: translate(0,0)       scale(1);    }
     }
-
     @keyframes fadeInDown {
       from { opacity: 0; transform: translateY(-16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     @keyframes fadeInUp {
       from { opacity: 0; transform: translateY(16px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
       20%       { transform: translateX(-6px); }
@@ -332,16 +320,14 @@
       80%       { transform: translateX(4px); }
     }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 480px) {
-      .card { padding: 28px 22px; }
-      html, body { overflow: auto; }
+      .panel { padding: 22px 20px 26px; }
+      .form-row { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Blobs -->
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
   <div class="blob blob-3"></div>
@@ -352,133 +338,132 @@
     <a href="/" class="logo">Act<span>Now</span></a>
 
     <div class="card">
-      <div class="slider" id="slider">
 
-        <!-- ══════════════ LOGIN PANEL ══════════════ -->
-        <div class="form-panel" id="loginPanel">
+      <!-- ── TAB BAR ── -->
+      <div class="tab-bar">
+        <button class="tab-btn active" id="loginTab"    onclick="switchTab('login')">🔑 Login</button>
+        <button class="tab-btn"        id="registerTab" onclick="switchTab('register')">✨ Register</button>
+      </div>
 
-          <div class="form-header">
-            <h2>Welcome Back 👋</h2>
-            <p>Login to your ActNOW account</p>
-          </div>
+      <!-- ══════════ LOGIN PANEL ══════════ -->
+      <div class="panel active" id="loginPanel">
 
-          <!-- Error message -->
-          <div class="error-msg" id="loginError">
-            ⚠️ <span id="loginErrorText">Invalid email or password. Please try again.</span>
-          </div>
-
-          <form action="/login" method="POST" id="loginForm" onsubmit="return validateLogin()">
-
-            <!-- Role selector -->
-            <span class="role-label">Login as</span>
-            <div class="role-cards" id="loginRoleCards">
-              <div class="role-card" onclick="selectRole('login','Volunteer',this)">
-                <span class="r-icon">🙋</span>
-                <span class="r-label">Volunteer</span>
-              </div>
-              <div class="role-card" onclick="selectRole('login','Organizer',this)">
-                <span class="r-icon">🏢</span>
-                <span class="r-label">Organizer</span>
-              </div>
-              <div class="role-card" onclick="selectRole('login','Admin',this)">
-                <span class="r-icon">🛡️</span>
-                <span class="r-label">Admin</span>
-              </div>
-            </div>
-            <input type="text" name="role" id="loginRole" required>
-
-            <!-- Email -->
-            <div class="field">
-              <label>Email Address</label>
-              <div class="input-wrap">
-                <input type="email" name="email" placeholder="you@example.com" required>
-              </div>
-            </div>
-
-            <!-- Password -->
-            <div class="field">
-              <label>Password</label>
-              <div class="input-wrap">
-                <input type="password" name="password" id="loginPw" placeholder="Enter your password" required>
-                <button type="button" class="toggle-pw" onclick="togglePw('loginPw', this)">👁️</button>
-              </div>
-            </div>
-
-            <button type="submit" class="submit-btn">Login →</button>
-          </form>
-
-          <div class="divider">or</div>
-
-          <div class="switch-text">
-            Don't have an account? <a onclick="showRegister()">Register here</a>
-          </div>
+        <div class="form-header">
+          <h2>Welcome Back 👋</h2>
+          <p>Login to your ActNOW account</p>
         </div>
 
-        <!-- ══════════════ REGISTER PANEL ══════════════ -->
-        <div class="form-panel" id="registerPanel">
-
-          <div class="form-header">
-            <h2>Create Account ✨</h2>
-            <p>Join the ActNOW community today</p>
-          </div>
-
-          <!-- Error message -->
-          <div class="error-msg" id="registerError">
-            ⚠️ <span id="registerErrorText">Please select a role to continue.</span>
-          </div>
-
-          <form action="/register_page" method="POST" id="registerForm" onsubmit="return validateRegister()">
-
-            <!-- Role selector -->
-            <span class="role-label">Register as</span>
-            <div class="role-cards reg-roles" id="registerRoleCards">
-              <div class="role-card" onclick="selectRole('register','Volunteer',this)">
-                <span class="r-icon">🙋</span>
-                <span class="r-label">Volunteer</span>
-              </div>
-              <div class="role-card" onclick="selectRole('register','Organizer',this)">
-                <span class="r-icon">🏢</span>
-                <span class="r-label">Organizer</span>
-              </div>
-            </div>
-            <input type="text" name="role" id="registerRole" required>
-
-            <!-- Full Name -->
-            <div class="field">
-              <label>Full Name</label>
-              <div class="input-wrap">
-                <input type="text" name="name" placeholder="Your full name" required>
-              </div>
-            </div>
-
-            <!-- Email -->
-            <div class="field">
-              <label>Email Address</label>
-              <div class="input-wrap">
-                <input type="email" name="email" placeholder="you@example.com" required>
-              </div>
-            </div>
-
-            <!-- Password -->
-            <div class="field">
-              <label>Password</label>
-              <div class="input-wrap">
-                <input type="password" name="password" id="registerPw" placeholder="Create a password" required>
-                <button type="button" class="toggle-pw" onclick="togglePw('registerPw', this)">👁️</button>
-              </div>
-            </div>
-
-            <button type="submit" class="submit-btn">Create Account →</button>
-          </form>
-
-          <div class="divider">or</div>
-
-          <div class="switch-text">
-            Already have an account? <a onclick="showLogin()">Login here</a>
-          </div>
+        <div class="error-msg" id="loginError">
+          ⚠️ <span id="loginErrorText">Invalid email or password.</span>
         </div>
 
-      </div><!-- /slider -->
+        <form action="/login" method="POST" onsubmit="return validateLogin()">
+
+          <span class="role-label">Login as</span>
+          <div class="role-cards login-roles">
+            <div class="role-card" onclick="selectRole('login','Volunteer',this)">
+              <span class="r-icon">🙋</span>
+              <span class="r-label">Volunteer</span>
+            </div>
+            <div class="role-card" onclick="selectRole('login','Organizer',this)">
+              <span class="r-icon">🏢</span>
+              <span class="r-label">Organizer</span>
+            </div>
+            <div class="role-card" onclick="selectRole('login','Admin',this)">
+              <span class="r-icon">🛡️</span>
+              <span class="r-label">Admin</span>
+            </div>
+          </div>
+          <input type="text" name="role" id="loginRole" required>
+
+          <div class="field">
+            <label>Email Address</label>
+            <input type="email" name="email" placeholder="you@example.com" required>
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+              <input type="password" name="password" id="loginPw" placeholder="Enter your password" required>
+              <button type="button" class="toggle-pw" onclick="togglePw('loginPw',this)">👁️</button>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn">Login →</button>
+        </form>
+
+        <div class="divider">or</div>
+        <div class="switch-text">
+          Don't have an account? <a onclick="switchTab('register')">Register here</a>
+        </div>
+      </div>
+
+      <!-- ══════════ REGISTER PANEL ══════════ -->
+      <div class="panel" id="registerPanel">
+
+        <div class="form-header">
+          <h2>Create Account ✨</h2>
+          <p>Join the ActNOW community today</p>
+        </div>
+
+        <div class="error-msg" id="registerError">
+          ⚠️ <span id="registerErrorText">Please select a role to continue.</span>
+        </div>
+
+        <form action="/register_page" method="POST" onsubmit="return validateRegister()">
+
+          <span class="role-label">Register as</span>
+          <div class="role-cards reg-roles">
+            <div class="role-card" onclick="selectRegRole('Volunteer',this)">
+              <span class="r-icon">🙋</span>
+              <span class="r-label">Volunteer</span>
+            </div>
+            <div class="role-card" onclick="selectRegRole('Organizer',this)">
+              <span class="r-icon">🏢</span>
+              <span class="r-label">Organizer</span>
+            </div>
+          </div>
+          <input type="text" name="role" id="registerRole" required>
+
+          <div class="field">
+            <label>Full Name</label>
+            <input type="text" name="name" placeholder="Your full name" required>
+          </div>
+
+          <!-- Org Name — shown only for Organizer -->
+          <div class="field org-only" id="orgNameField">
+            <label>Organization Name</label>
+            <input type="text" name="org_name" id="orgNameInput" placeholder="Your organization name">
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label>Email Address</label>
+              <input type="email" name="email" placeholder="you@example.com" required>
+            </div>
+            <div class="field">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" placeholder="10-digit number" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Password</label>
+            <div class="input-wrap">
+              <input type="password" name="password" id="registerPw" placeholder="Create a password" required>
+              <button type="button" class="toggle-pw" onclick="togglePw('registerPw',this)">👁️</button>
+            </div>
+          </div>
+
+          <button type="submit" class="submit-btn">Create Account →</button>
+        </form>
+
+        <div class="divider">or</div>
+        <div class="switch-text">
+          Already have an account? <a onclick="switchTab('login')">Login here</a>
+        </div>
+      </div>
+
     </div><!-- /card -->
 
     <div class="home-link">
@@ -487,8 +472,6 @@
 
   </div><!-- /page -->
 
-
-  <!-- Flash error from Flask (if any) -->
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
       <script>
@@ -499,47 +482,51 @@
     {% endif %}
   {% endwith %}
 
-
   <script>
-    // ── Role selection ──
-    const loginRoleVal    = document.getElementById('loginRole');
-    const registerRoleVal = document.getElementById('registerRole');
+    // ── Tab switching ──
+    function switchTab(tab) {
+      document.getElementById('loginPanel').classList.toggle('active',    tab === 'login');
+      document.getElementById('registerPanel').classList.toggle('active', tab === 'register');
+      document.getElementById('loginTab').classList.toggle('active',      tab === 'login');
+      document.getElementById('registerTab').classList.toggle('active',   tab === 'register');
+    }
 
+    // ── Role selection (login) ──
     function selectRole(form, role, el) {
-      const container = el.parentElement;
-      container.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+      el.parentElement.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
-      if (form === 'login')    loginRoleVal.value    = role;
-      if (form === 'register') registerRoleVal.value = role;
+      document.getElementById('loginRole').value = role;
+    }
+
+    // ── Role selection (register) — shows/hides org name field ──
+    function selectRegRole(role, el) {
+      el.parentElement.querySelectorAll('.role-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('registerRole').value = role;
+
+      const orgField   = document.getElementById('orgNameField');
+      const orgInput   = document.getElementById('orgNameInput');
+
+      if (role === 'Organizer') {
+        orgField.style.display = 'block';
+        orgInput.required = true;
+      } else {
+        orgField.style.display = 'none';
+        orgInput.required = false;
+        orgInput.value = '';
+      }
     }
 
     // ── Password toggle ──
     function togglePw(inputId, btn) {
       const input = document.getElementById(inputId);
-      if (input.type === 'password') {
-        input.type = 'text';
-        btn.textContent = '🙈';
-      } else {
-        input.type = 'password';
-        btn.textContent = '👁️';
-      }
-    }
-
-    // ── Slide between login & register ──
-    const slider = document.getElementById('slider');
-
-    function showRegister() {
-      slider.classList.add('show-register');
-    }
-
-    function showLogin() {
-      slider.classList.remove('show-register');
+      input.type = input.type === 'password' ? 'text' : 'password';
+      btn.textContent = input.type === 'password' ? '👁️' : '🙈';
     }
 
     // ── Validate login ──
     function validateLogin() {
-      const role = loginRoleVal.value;
-      if (!role) {
+      if (!document.getElementById('loginRole').value) {
         showError('loginError', 'Please select a role before logging in.');
         return false;
       }
@@ -549,8 +536,7 @@
 
     // ── Validate register ──
     function validateRegister() {
-      const role = registerRoleVal.value;
-      if (!role) {
+      if (!document.getElementById('registerRole').value) {
         showError('registerError', 'Please select a role to register.');
         return false;
       }
@@ -561,10 +547,9 @@
     // ── Error helpers ──
     function showError(id, msg) {
       const el = document.getElementById(id);
-      const textEl = el.querySelector('span');
-      if (msg) textEl.textContent = msg;
+      el.querySelector('span').textContent = msg;
       el.classList.remove('show');
-      void el.offsetWidth; // re-trigger animation
+      void el.offsetWidth;
       el.classList.add('show');
     }
 
@@ -572,11 +557,9 @@
       document.getElementById(id).classList.remove('show');
     }
 
-    function showFlashError(msg) {
-      showError('loginError', msg);
-    }
+    function showFlashError(msg) { showError('loginError', msg); }
 
-    // Show error if Flask redirected back with ?error=1
+    // Show error if Flask redirected with ?error=1
     const params = new URLSearchParams(window.location.search);
     if (params.get('error') === '1') {
       showError('loginError', 'Wrong email or password. Please try again.');
