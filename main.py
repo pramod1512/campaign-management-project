@@ -122,12 +122,27 @@ def campaigns():
 @app.route("/campaigns_search", methods=['GET'])
 def campaign_search():
     search = request.args.get('search', '')
-    cursor.execute(
-        "SELECT * FROM create_campaign WHERE title LIKE %s OR state LIKE %s OR district LIKE %s",
-        (search, search, search)
-    )
+    state  = request.args.get('state', '')
+    status = request.args.get('status', '')
+
+    query  = "SELECT * FROM create_campaign WHERE 1=1"
+    params = []
+
+    if search:
+        query += " AND (title LIKE %s OR state LIKE %s OR district LIKE %s)"
+        params += [f'%{search}%', f'%{search}%', f'%{search}%']
+
+    if state:
+        query += " AND state = %s"
+        params.append(state)
+
+    if status:
+        query += " AND status = %s"
+        params.append(status)
+
+    cursor.execute(query, params)
     result = cursor.fetchall()
-    return render_template('campaigns.html', result=result)
+    return render_template('campaigns.html', result=result))
 
 
 # ─────────────────────────────────────────
