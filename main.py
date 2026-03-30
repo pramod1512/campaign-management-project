@@ -58,11 +58,19 @@ def register_page():
     email    = request.form['email']
     password = request.form['password']
     role     = request.form['role']
+    phone    = request.form.get('phone', '')
+    org_name = request.form.get('org_name', '')
 
     if role == 'Volunteer':
-        cursor.execute("INSERT INTO vol_register(full_name,email,password,role) VALUES(%s,%s,%s,%s)", (name, email, password, role))
+        cursor.execute(
+            "INSERT INTO vol_register(full_name,email,password,role,phone) VALUES(%s,%s,%s,%s,%s)",
+            (name, email, password, role, phone)
+        )
     elif role == 'Organizer':
-        cursor.execute("INSERT INTO org_register(full_name,email,password,role) VALUES(%s,%s,%s,%s)", (name, email, password, role))
+        cursor.execute(
+            "INSERT INTO org_register(full_name,email,password,role,phone,org_name) VALUES(%s,%s,%s,%s,%s,%s)",
+            (name, email, password, role, phone, org_name)
+        )
     mydb.commit()
     return render_template('login.html')
 
